@@ -23,7 +23,8 @@ function Login() {
         uid: userAuth.user.uid,
         displayName: userAuth.user.displayName,
       }))
-    })
+      navigate.push('/teslaaccount')
+    }).catch((error)=>alert(error.message))
   };
 
   return (
