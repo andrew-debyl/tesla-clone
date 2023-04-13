@@ -1,15 +1,29 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
 import ButtonPrimary from "./ButtonPrimary";
 import "./Login.css";
+import ButtonSecondary from "./ButtonSecondary";
+import {auth} from './fire-base'
+import { useDispatch } from "react-redux";
+import { login } from "../features/userSlice";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const signIn = (e) => {
-    //e.preventDefault()
+    e.preventDefault()
+
+    auth.signInWithEmailAndPassword(email, password).then((userAuth) => {
+      dispatch(login({
+        email: userAuth.user.email,
+        uid: userAuth.user.uid,
+        displayName: userAuth.user.displayName,
+      }))
+    })
   };
 
   return (
@@ -31,7 +45,7 @@ function Login() {
       </div>
       <div className="login__info">
         <h1>Sign In</h1>
-        <form>
+        <form className="login__form">
           <label htmlFor="email">Email Address</label>
           <input
             type="email"
@@ -48,6 +62,12 @@ function Login() {
           />
           <ButtonPrimary name="Sign In" type="submit" onClick={signIn} />
         </form>
+        <div className="login__divider">
+          <hr /> <span>OR</span> <hr />
+        </div>
+        <Link to='/signup'> 
+          <ButtonSecondary name='create account'/>
+        </Link>
       </div>
     </div>
   );
