@@ -39,7 +39,7 @@ function SignUp() {
               displayName: fName,
             })
           );
-          navigate.push('/teslaaccount')
+          navigate('/teslaaccount')
         });
     }).catch((error) => alert(error.message))
   };

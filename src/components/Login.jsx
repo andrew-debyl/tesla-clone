@@ -1,37 +1,36 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
 import ButtonPrimary from "./ButtonPrimary";
 import "./Login.css";
 import ButtonSecondary from "./ButtonSecondary";
-import {auth} from './fire-base'
+import { auth } from "./fire-base";
 import { useDispatch } from "react-redux";
-import { login } from "../features/userSlice";
+import {signInWithEmailAndPassword} from 'firebase/auth'
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const [user, setUser] = React.useState({})
 
   const signIn = (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    auth.signInWithEmailAndPassword(email, password).then((userAuth) => {
-      dispatch(login({
-        email: userAuth.user.email,
-        uid: userAuth.user.uid,
-        displayName: userAuth.user.displayName,
-      }))
-      navigate.push('/teslaaccount')
-    }).catch((error)=>alert(error.message))
-  };
+    signInWithEmailAndPassword(auth, email, password).then(({ user }) => {
+      setUser(user);
+    }).catch((error) => alert(error.message));
+
+    navigate("/teslaaccount")
+  }
 
   return (
     <div className="login">
       <div className="login__header">
         <div className="login__logo">
-          <Link>
+          <Link to="/">
             <img
               src="https://assets.website-files.com/5e8fceb1c9af5c3915ec97a0/5ec2f037975ed372da9f6286_Tesla-Logo-PNG-HD.png"
               alt=""
@@ -66,8 +65,8 @@ function Login() {
         <div className="login__divider">
           <hr /> <span>OR</span> <hr />
         </div>
-        <Link to='/signup'> 
-          <ButtonSecondary name='create account'/>
+        <Link to="/signup">
+          <ButtonSecondary name="create account" />
         </Link>
       </div>
     </div>
